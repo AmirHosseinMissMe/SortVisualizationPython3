@@ -39,3 +39,5 @@ PURPLE = (200, 0, 200)
 
 WIDTH = 800
 HEIGHT = 630
+
+CAPTION = "Sorting Algorithm Visualizer"
