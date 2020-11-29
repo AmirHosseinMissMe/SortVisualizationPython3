@@ -300,3 +300,194 @@ def maxHeapify(array, i, size):
     drawLines()
 
 
+def setLineColor(index, color):
+    line_x = 2 + index * (5 + lineWidth)
+    pygame.draw.rect(win, color, (line_x, vet[index] - 1, lineWidth, 500 - vet[index] + 2))
+    pygame.display.update()
+    colors[index] = color
+
+
+def drawTimer():
+    global elapsedTime
+    pygame.event.get()
+    elapsedTime = time.time() - startTime
+    pygame.draw.rect(win, (0, 0, 20), (640, 615, 160, 15))
+    win.blit(ARIAL12.render('Elapsed time: ' + str(round(elapsedTime, 2)) + ' seconds', False, (255, 255, 255)), (640,
+                                                                                                                   615))
+
+
+def drawText():
+    win.blit(ARIAL14.render('Speed:', False, (255, 255, 255)), (5, 505))  # Speed Title
+    win.blit(ARIAL12.render('Instant', False, (255, 255, 255)), (25, 528))  # Speed 0 - Instant
+    win.blit(ARIAL12.render('Fast', False, (255, 255, 255)), (25, 548))  # Speed 1 - Fast
+    win.blit(ARIAL12.render('Normal', False, (255, 255, 255)), (25, 568))  # Speed 2 - Normal
+    win.blit(ARIAL12.render('Slow', False, (255, 255, 255)), (25, 588))  # Speed 3 - Slow
+    win.blit(ARIAL12.render('Very slow', False, (255, 255, 255)), (25, 608))  # Speed 4 - Very slow
+
+    win.blit(ARIAL14.render('Array Size:', False, (255, 255, 255)), (95, 505))  # Array Size Title
+    win.blit(ARIAL12.render('Huge', False, (255, 255, 255)), (115, 528))  # Size 5 - Huge
+    win.blit(ARIAL12.render('Big', False, (255, 255, 255)), (115, 548))  # Size 6 - Big
+    win.blit(ARIAL12.render('Medium', False, (255, 255, 255)), (115, 568))  # Size 7 - Medium
+    win.blit(ARIAL12.render('Small', False, (255, 255, 255)), (115, 588))  # Size 8 - Small
+    win.blit(ARIAL12.render('Very small', False, (255, 255, 255)), (115, 608))  # Size 9 - Very small
+
+    win.blit(ARIAL14.render('Algorithm:', False, (255, 255, 255)), (190, 505))  # Algorithm Title
+    win.blit(ARIAL12.render('Bubble Sort', False, (255, 255, 255)), (210, 528))  # Algorithm 10 - Bubble Sort
+    win.blit(ARIAL12.render('Selection Sort', False, (255, 255, 255)), (210, 548))  # Algorithm 11 - Selection Sort
+    win.blit(ARIAL12.render('Quick Sort', False, (255, 255, 255)), (210, 568))  # Algorithm 12 - Quick Sort
+    win.blit(ARIAL12.render('Merge Sort', False, (255, 255, 255)), (210, 588))  # Algorithm 13 - Merge Sort
+    win.blit(ARIAL12.render('Heap Sort', False, (255, 255, 255)), (210, 608))  # Algorithm 14 - Heap Sort
+
+
+def drawCircles():
+    for num in range(len(CIRCLE_POS)):
+        pygame.draw.circle(win, (255, 255, 255), CIRCLE_POS[num], 5)  # main circle
+        pygame.draw.circle(win, (255, 255, 255), CIRCLE_POS[num], 3)  # smaller circle
+
+    if sortSpeed == 0:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[0][0], CIRCLE_POS[0][1]), 3)
+    elif sortSpeed == 1:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[1][0], CIRCLE_POS[1][1]), 3)
+    elif sortSpeed == 2:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[2][0], CIRCLE_POS[2][1]), 3)
+    elif sortSpeed == 3:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[3][0], CIRCLE_POS[3][1]), 3)
+    elif sortSpeed == 4:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[4][0], CIRCLE_POS[4][1]), 3)
+
+    if arraySize == 100:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[5][0], CIRCLE_POS[5][1]), 3)
+    elif arraySize == 80:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[6][0], CIRCLE_POS[6][1]), 3)
+    elif arraySize == 40:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[7][0], CIRCLE_POS[7][1]), 3)
+    elif arraySize == 20:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[8][0], CIRCLE_POS[8][1]), 3)
+    elif arraySize == 10:
+        pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[9][0], CIRCLE_POS[9][1]), 3)
+
+    pygame.draw.circle(win, (0, 0, 0), (CIRCLE_POS[algorithm+10][0], CIRCLE_POS[algorithm+10][1]), 3)
+
+    pygame.display.update()
+
+
+def checkDistance(x, y, x2, y2):
+    return math.sqrt((x - x2) ** 2 + (y - y2) ** 2)
+
+
+def markCircle():
+    global sortSpeed, arraySize, algorithm
+    for num in range(5):
+        if checkDistance(mouseX, mouseY, int(CIRCLE_POS[num][0]), int(CIRCLE_POS[num][1])) < 5:
+            sortSpeed = num
+            return num
+    for num in range(5):  # loop through speed buttons
+        if checkDistance(mouseX, mouseY, int(CIRCLE_POS[num + 5][0]), int(CIRCLE_POS[num + 5][1])) < 5:
+            if num + 5 == 5:
+                arraySize = 100
+            elif num + 5 == 6:
+                arraySize = 80
+            elif num + 5 == 7:
+                arraySize = 40
+            elif num + 5 == 8:
+                arraySize = 20
+            elif num + 5 == 9:
+                arraySize = 10
+            refreshLines()
+            return num + 5
+    for num in range(5):  # loop through algorithm buttons
+        if checkDistance(mouseX, mouseY, int(CIRCLE_POS[num + 10][0]), int(CIRCLE_POS[num + 10][1])) < 5:
+            if num + 10 == 10:
+                algorithm = 0
+            elif num + 10 == 11:
+                algorithm = 1
+            elif num + 10 == 12:
+                algorithm = 2
+            elif num + 10 == 13:
+                algorithm = 3
+            elif num + 10 == 14:
+                algorithm = 4
+            return num + 10
+    return False
+
+
+def draw_buttons():
+    if mark_button() == 1:
+        pygame.draw.rect(win, LIGHT_BLUE, BUTTONS_POS[0])
+        pygame.draw.rect(win, BLUE, BUTTONS_POS[1])
+    elif mark_button() == 2:
+        pygame.draw.rect(win, LIGHT_BLUE, BUTTONS_POS[1])
+        pygame.draw.rect(win, BLUE, BUTTONS_POS[0])
+    else:
+        pygame.draw.rect(win, BLUE, BUTTONS_POS[0])
+        pygame.draw.rect(win, BLUE, BUTTONS_POS[1])
+    win.blit(IMPACT20.render('SORT!', False, DARK_BLUE),
+             (BUTTONS_POS[0][0] + 20, BUTTONS_POS[0][1] + 10))
+    win.blit(ARIAL12.render('or press s', False, (255, 255, 255)), (BUTTONS_POS[0][0] + 20, BUTTONS_POS[0][1] + 55))
+    win.blit(IMPACT20.render('REFRESH', False, DARK_BLUE),
+             (BUTTONS_POS[1][0] + 10, BUTTONS_POS[1][1] + 10))
+    win.blit(ARIAL12.render('or press r', False, (255, 255, 255)), (BUTTONS_POS[1][0] + 20, BUTTONS_POS[1][1] + 55))
+    pygame.display.update()
+
+
+def mark_button():
+    global mouseX, mouseY
+    mouseX, mouseY = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
+    for num in range(len(BUTTONS_POS)):
+        if BUTTONS_POS[num][0] < mouseX < BUTTONS_POS[num][0] + BUTTONS_POS[num][2] and \
+                BUTTONS_POS[num][1] < mouseY < BUTTONS_POS[num][1] + BUTTONS_POS[num][3]:
+            return num + 1
+    return False
+
+
+def reset_timer():
+    global elapsedTime, startTime
+    elapsedTime = 0
+    startTime = time.time()
+    drawTimer()
+
+
+draw_buttons()
+drawLines()
+drawText()
+drawCircles()
+reset_timer()
+
+run = True
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.MOUSEMOTION:
+            draw_buttons()
+        if event.type == pygame.MOUSEBUTTONUP:
+            pygame.event.get()
+            mouseX, mouseY = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
+            markCircle()
+            drawCircles()
+            if mark_button() == 1:
+                sort()
+            elif mark_button() == 2:
+                reset_timer()
+                refreshLines()
+                clearScreen()
+                drawLines()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r and rPressed is False:
+                rPressed = True
+                reset_timer()
+                refreshLines()
+                clearScreen()
+                drawLines()
+            if event.key == pygame.K_s and sPressed is False:
+                sPressed = True
+                sort()
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_r:
+                rPressed = False
+            if event.key == pygame.K_s:
+                sPressed = False
+            if event.key == pygame.K_e:
+                e_pressed = False
+
+pygame.quit()
